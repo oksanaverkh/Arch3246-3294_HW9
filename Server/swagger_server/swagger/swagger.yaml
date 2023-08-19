@@ -1,0 +1,157 @@
+openapi: 3.0.0
+info:
+  title: order of cloud resources
+  version: 0.0.1
+servers:
+- url: http://localhost:8080/api/v1/
+  description: Dev server
+paths:
+  /clouds:
+    get:
+      tags:
+      - Clouds
+      summary: method of getting cloud resource
+      operationId: get_all_clouds
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cloud'
+        default:
+          description: Another answers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cloud'
+      x-openapi-router-controller: swagger_server.controllers.clouds_controller
+    post:
+      tags:
+      - Clouds
+      summary: method of creating order in the cloud
+      operationId: create_cloud
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cloud'
+        default:
+          description: Another answers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cloud'
+      x-openapi-router-controller: swagger_server.controllers.clouds_controller
+  /clouds/{cloud_id}:
+    get:
+      tags:
+      - Clouds
+      summary: method of getting order
+      operationId: get_order_by_id
+      parameters:
+      - name: cloud_id
+        in: path
+        description: order identification in cloud
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: ff05b315
+      responses:
+        "200":
+          description: Successfully downloaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cloud'
+        "404":
+          description: Order is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cloud'
+      x-openapi-router-controller: swagger_server.controllers.clouds_controller
+    delete:
+      tags:
+      - Clouds
+      summary: method of deleting order in the cloud
+      operationId: cancel_cloud_by_id
+      parameters:
+      - name: cloud_id
+        in: path
+        description: order identification in cloud
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: ff05b315
+      responses:
+        "200":
+          description: Successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cloud'
+        "404":
+          description: Order is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cloud'
+      x-openapi-router-controller: swagger_server.controllers.clouds_controller
+components:
+  schemas:
+    Cloud:
+      required:
+      - CPU
+      - HDD
+      - OS
+      - RAM
+      - client_id
+      type: object
+      properties:
+        cloud_id:
+          type: string
+          example: ff05b315
+        client_id:
+          type: string
+          example: ff05b315
+        OS:
+          type: string
+          description: server OS
+          enum:
+          - windows
+          - linux
+        RAM:
+          type: string
+          description: server RAM
+        CPU:
+          type: string
+          description: server CPU
+          example: "6"
+      example:
+        OS: windows
+        CPU: "6"
+        cloud_id: ff05b315
+        client_id: ff05b315
+        RAM: RAM
+    Clouds:
+      type: array
+      items:
+        $ref: '#/components/schemas/Cloud'
+    Error:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+
